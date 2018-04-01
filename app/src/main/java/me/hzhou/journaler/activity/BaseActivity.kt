@@ -1,15 +1,18 @@
 package me.hzhou.journaler.activity
 
 import android.os.Bundle
-import android.support.v4.app.FragmentActivity
+import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import kotlinx.android.synthetic.main.activity_header.*
+import android.view.Menu
+import android.view.MenuItem
+import kotlinx.android.synthetic.main.activity_main.*
+import me.hzhou.journaler.R
 
 /**
  * Created by hzhou on 3/31/18.
  * Email: hzhou.me@gmail.com
  */
-abstract class BaseActivity : FragmentActivity() {
+abstract class BaseActivity : AppCompatActivity() {
 
     protected abstract val tag: String
 
@@ -21,8 +24,27 @@ abstract class BaseActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(getLayout())
-        activity_title.setText(getActivityTitle())
+        setSupportActionBar(toolbar)
         Log.v(tag, "[ ON CREATE ]")
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.drawing_menu -> {
+                Log.v(tag, "Main Menu")
+                return true
+            }
+            R.id.options_menu -> {
+                Log.v(tag, "Options Menu")
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
