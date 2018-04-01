@@ -3,6 +3,7 @@ package me.hzhou.journaler.activity
 import android.os.Bundle
 import android.support.v4.app.FragmentActivity
 import android.util.Log
+import kotlinx.android.synthetic.main.activity_header.*
 
 /**
  * Created by hzhou on 3/31/18.
@@ -14,10 +15,13 @@ abstract class BaseActivity : FragmentActivity() {
 
     protected abstract fun getLayout(): Int
 
+    protected abstract fun getActivityTitle(): Int
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(getLayout())
+        activity_title.setText(getActivityTitle())
         Log.v(tag, "[ ON CREATE ]")
     }
 
