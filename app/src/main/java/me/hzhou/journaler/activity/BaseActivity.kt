@@ -1,10 +1,12 @@
 package me.hzhou.journaler.activity
 
+import android.Manifest
 import android.app.Activity
 import android.content.Context
+import android.content.pm.PackageManager
 import android.graphics.Typeface
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import android.support.v4.app.ActivityCompat
 import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.Menu
@@ -18,12 +20,14 @@ import android.widget.EditText
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_main.*
 import me.hzhou.journaler.R
+import me.hzhou.journaler.permission.PermissionCompatActivity
+import java.util.*
 
 /**
  * Created by hzhou on 3/31/18.
  * Email: hzhou.me@gmail.com
  */
-abstract class BaseActivity : AppCompatActivity() {
+abstract class BaseActivity : PermissionCompatActivity() {
 
     protected abstract val tag: String
 
@@ -34,6 +38,7 @@ abstract class BaseActivity : AppCompatActivity() {
     companion object {
         private var fontExoBold: Typeface? = null
         private var fontExoRegular: Typeface? = null
+        val REQUEST_GPS = 0
 
         fun applyFonts(view: View, ctx: Context) {
 
@@ -87,6 +92,11 @@ abstract class BaseActivity : AppCompatActivity() {
         setContentView(getLayout())
         setSupportActionBar(toolbar)
         Log.v(tag, "[ ON CREATE ]")
+
+        requestPermissions(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+        )
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -174,5 +184,4 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     fun Activity.getAnimation(animation: Int): Animation = AnimationUtils.loadAnimation(this, animation)
-
 }
