@@ -1,14 +1,18 @@
 package me.hzhou.journaler.activity
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.Typeface
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -39,7 +43,7 @@ abstract class BaseActivity : AppCompatActivity() {
             }
             when (view) {
                 is ViewGroup -> {
-                    for (x in 0..view.childCount - 1) {
+                    for (x in 0 until view.childCount) {
                         applyFonts(view.getChildAt(x), ctx)
                     }
                 }
@@ -79,6 +83,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
         setContentView(getLayout())
         setSupportActionBar(toolbar)
         Log.v(tag, "[ ON CREATE ]")
@@ -90,16 +95,16 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
+        return when (item.itemId) {
             R.id.drawing_menu -> {
                 Log.v(tag, "Main Menu")
-                return true
+                true
             }
             R.id.options_menu -> {
                 Log.v(tag, "Options Menu")
-                return true
+                true
             }
-            else -> return super.onOptionsItemSelected(item)
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
@@ -122,6 +127,8 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         Log.v(tag, "[ ON RESUME ]")
+        val animation = getAnimation(R.anim.top_to_bottom)
+        findViewById<Toolbar>(R.id.toolbar).startAnimation(animation)
     }
 
     override fun onPostResume() {
@@ -132,6 +139,8 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         Log.v(tag, "[ ON PAUSE ]")
+        val animation = getAnimation(R.anim.hide_to_top)
+        findViewById<Toolbar>(R.id.toolbar).startAnimation(animation)
     }
 
     override fun onStop() {
@@ -163,5 +172,7 @@ abstract class BaseActivity : AppCompatActivity() {
                     "fonts/Exo2-Regular.ttf")
         }
     }
+
+    fun Activity.getAnimation(animation: Int): Animation = AnimationUtils.loadAnimation(this, animation)
 
 }

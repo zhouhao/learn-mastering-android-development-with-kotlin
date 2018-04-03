@@ -6,6 +6,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/black_transparent_40"
         android:orientation="vertical">
 
         <android.support.v7.widget.Toolbar
@@ -21,11 +22,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/title"
+            android:inputType="text"
             android:padding="@dimen/form_padding" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/grey_text_light"
             android:orientation="horizontal"
             android:weightSum="1">
 
