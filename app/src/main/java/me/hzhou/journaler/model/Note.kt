@@ -8,8 +8,7 @@ import android.location.Location
  */
 class Note(title: String,
            message: String,
-           location: Location,
-           var scheduledFor: Long) : Entry(title, message, location) {
+           location: Location) : Entry(title, message, location) {
 
-    override val id = 0L
+    override var id = 0L
 }

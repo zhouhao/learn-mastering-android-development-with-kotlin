@@ -8,7 +8,8 @@ import android.location.Location
  */
 class Todo(title: String,
            message: String,
-           location: Location) : Entry(title, message, location) {
+           location: Location,
+           var scheduledFor: Long) : Entry(title, message, location) {
 
-    override val id = 0L
+    override var id = 0L
 }

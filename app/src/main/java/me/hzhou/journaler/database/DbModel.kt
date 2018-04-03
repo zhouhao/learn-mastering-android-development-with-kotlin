@@ -5,5 +5,5 @@ package me.hzhou.journaler.database
  * Email: hzhou.me@gmail.com
  */
 abstract class DbModel {
-    abstract val id: Long
+    abstract var id: Long
 }
