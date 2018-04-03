@@ -17,6 +17,7 @@
 
         <EditText
             android:id="@+id/todo_title"
+            style="@style/edit_text_transparent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/title"
@@ -30,6 +31,7 @@
 
             <Button
                 android:id="@+id/pick_date"
+                style="@style/simple_button_green"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
@@ -37,6 +39,7 @@
 
             <Button
                 android:id="@+id/pick_time"
+                style="@style/simple_button_green"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
@@ -46,6 +49,7 @@
 
         <EditText
             android:id="@+id/todo_content"
+            style="@style/edit_text_gery_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="top"
