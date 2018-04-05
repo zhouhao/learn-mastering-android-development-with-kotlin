@@ -5,6 +5,7 @@ import android.location.LocationListener
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.os.Message
 import android.support.v4.content.ContextCompat
 import android.text.Editable
 import android.text.TextUtils
@@ -61,15 +62,7 @@ class NoteActivity : ItemActivity() {
                     } else {
                         Log.e(tag, "Note not inserted.")
                     }
-                    handler?.post {
-                        var color = R.color.vermilion
-                        if (result) {
-                            color = R.color.green
-                        }
-                        indicator.setBackgroundColor(
-                                ContextCompat.getColor(this@NoteActivity, color)
-                        )
-                    }
+                    sendMessage(result)
                 }
             }
 
@@ -86,9 +79,32 @@ class NoteActivity : ItemActivity() {
 
     }
 
+    private fun sendMessage(result: Boolean) {
+        val msg = handler?.obtainMessage()
+        if (result) {
+            msg?.arg1 = 1
+        } else {
+            msg?.arg1 = 0
+        }
+        handler?.sendMessage(msg)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        handler = Handler(Looper.getMainLooper())
+        handler = object : Handler(Looper.getMainLooper()) {
+            override fun handleMessage(msg: Message?) {
+                msg?.let {
+                    var color = R.color.vermilion
+                    if (msg.arg1 > 0) {
+                        color = R.color.green
+                    }
+                    indicator.setBackgroundColor(
+                            ContextCompat.getColor(this@NoteActivity, color)
+                    )
+                }
+                super.handleMessage(msg)
+            }
+        }
         note_title.addTextChangedListener(textWatcher)
         note_content.addTextChangedListener(textWatcher)
     }
@@ -123,15 +139,7 @@ class NoteActivity : ItemActivity() {
                     Log.e(tag, "Note not updated.")
                 }
 
-                handler?.post {
-                    var color = R.color.vermilion
-                    if (result) {
-                        color = R.color.green
-                    }
-                    indicator.setBackgroundColor(
-                            ContextCompat.getColor(this@NoteActivity, color)
-                    )
-                }
+                sendMessage(result)
             }
         }
     }

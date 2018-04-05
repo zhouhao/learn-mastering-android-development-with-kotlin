@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.BounceInterpolator
+import android.widget.ListView
 import me.hzhou.journaler.R
 import me.hzhou.journaler.activity.NoteActivity
 import me.hzhou.journaler.activity.TodoActivity
@@ -55,6 +56,18 @@ class ItemsFragment : BaseFragment() {
             builder.show()
         }
         return view
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val items = view?.findViewById<ListView>(R.id.items)
+        items?.let {
+            items.postDelayed({
+                if (!activity!!.isFinishing) {
+                    items.setBackgroundColor(resources.getColor(R.color.grey_text_middle))
+                }
+            }, 3000)
+        }
     }
 
     private fun openCreateNote() {
