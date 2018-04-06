@@ -1,5 +1,6 @@
 package me.hzhou.journaler.activity
 
+import android.content.Intent
 import android.location.Location
 import android.location.LocationListener
 import android.os.Bundle
@@ -10,13 +11,13 @@ import android.support.v4.content.ContextCompat
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
-import android.util.Log
 import kotlinx.android.synthetic.main.activity_note.*
 import me.hzhou.journaler.R
-import me.hzhou.journaler.database.Db
 import me.hzhou.journaler.execution.TaskExecutor
 import me.hzhou.journaler.location.LocationProvider
+import me.hzhou.journaler.model.MODE
 import me.hzhou.journaler.model.Note
+import me.hzhou.journaler.service.DatabaseService
 
 /**
  * Created by hzhou on 3/31/18.
@@ -50,20 +51,13 @@ class NoteActivity : ItemActivity() {
                 val title = getNoteTitle()
                 val content = getNoteContent()
                 note = Note(title, content, location)
-                executor.execute {
-                    val param = note
-                    var result = false
-                    param?.let {
-                        result = Db.NOTE.insert(param) > 0
 
-                    }
-                    if (result) {
-                        Log.i(tag, "Note inserted.")
-                    } else {
-                        Log.e(tag, "Note not inserted.")
-                    }
-                    sendMessage(result)
-                }
+                // Switching to intent service.
+                val dbIntent = Intent(this@NoteActivity, DatabaseService::class.java)
+                dbIntent.putExtra(DatabaseService.EXTRA_ENTRY, note)
+                dbIntent.putExtra(DatabaseService.EXTRA_OPERATION, MODE.CREATE.mode)
+                startService(dbIntent)
+                sendMessage(true)
             }
 
         }
@@ -98,9 +92,7 @@ class NoteActivity : ItemActivity() {
                     if (msg.arg1 > 0) {
                         color = R.color.green
                     }
-                    indicator.setBackgroundColor(
-                            ContextCompat.getColor(this@NoteActivity, color)
-                    )
+                    indicator.setBackgroundColor(ContextCompat.getColor(this@NoteActivity, color))
                 }
                 super.handleMessage(msg)
             }
@@ -125,24 +117,14 @@ class NoteActivity : ItemActivity() {
         } else {
             note?.title = getNoteTitle()
             note?.message = getNoteContent()
-            executor.execute {
-                val param = note
-                var result = false
 
-                param?.let {
-                    result = Db.NOTE.update(param) > 0
-                }
-
-                if (result) {
-                    Log.i(tag, "Note updated.")
-                } else {
-                    Log.e(tag, "Note not updated.")
-                }
-
-                sendMessage(result)
-            }
+            // Switching to intent service.
+            val dbIntent = Intent(this@NoteActivity, DatabaseService::class.java)
+            dbIntent.putExtra(DatabaseService.EXTRA_ENTRY, note)
+            dbIntent.putExtra(DatabaseService.EXTRA_OPERATION, MODE.EDIT.mode)
+            startService(dbIntent)
+            sendMessage(true)
         }
     }
-
 
 }

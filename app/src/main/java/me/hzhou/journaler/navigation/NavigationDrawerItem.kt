@@ -1,6 +1,7 @@
 package me.hzhou.journaler.navigation
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,9 +14,11 @@ import me.hzhou.journaler.R
  * Created by hzhou on 4/1/18.
  * Email: hzhou.me@gmail.com
  */
-data class NavigationDrawerItem(val title: String, val onClick: Runnable)
+data class NavigationDrawerItem(val title: String, val onClick: Runnable, var enabled: Boolean = true)
 
 class NavigationDrawerAdapter(val ctx: Context, val items: List<NavigationDrawerItem>) : BaseAdapter() {
+
+    private val tag = "NavigationDrawerAdapter"
 
     override fun getView(position: Int, v: View?, group: ViewGroup?): View {
         val inflater = LayoutInflater.from(ctx)
@@ -28,7 +31,11 @@ class NavigationDrawerAdapter(val ctx: Context, val items: List<NavigationDrawer
         val title = view.findViewById<Button>(R.id.drawer_item)
         title.text = item.title
         title.setOnClickListener {
-            item.onClick.run()
+            if (item.enabled) {
+                item.onClick.run()
+            } else {
+                Log.w(tag, "Item is disabled: $item")
+            }
         }
         return view
     }
