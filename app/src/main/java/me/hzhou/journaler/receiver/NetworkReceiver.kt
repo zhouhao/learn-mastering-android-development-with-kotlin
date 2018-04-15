@@ -43,7 +43,11 @@ class NetworkReceiver : BroadcastReceiver() {
                 }
             } else {
                 Log.w(tag, "Connectivity [ UNAVAILABLE ]")
-                context.unbindService(serviceConnection)
+                try {
+                    context.unbindService(serviceConnection)
+                } catch (e: IllegalArgumentException) {
+                    // ignore
+                }
             }
         }
     }
