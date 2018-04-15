@@ -50,6 +50,7 @@ class NoteActivity : ItemActivity() {
                 LocationProvider.unsubscribe(this)
                 val title = getNoteTitle()
                 val content = getNoteContent()
+                this@NoteActivity.location = location;
                 note = Note(title, content, location)
 
                 // Switching to intent service.
