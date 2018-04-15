@@ -1,6 +1,9 @@
 package me.hzhou.journaler.activity
 
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.location.Location
 import android.location.LocationListener
 import android.os.Bundle
@@ -11,8 +14,10 @@ import android.support.v4.content.ContextCompat
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
+import android.util.Log
 import kotlinx.android.synthetic.main.activity_note.*
 import me.hzhou.journaler.R
+import me.hzhou.journaler.database.Crud
 import me.hzhou.journaler.execution.TaskExecutor
 import me.hzhou.journaler.location.LocationProvider
 import me.hzhou.journaler.model.MODE
@@ -74,7 +79,18 @@ class NoteActivity : ItemActivity() {
 
     }
 
+    private val crudOperationListener = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            intent?.let {
+                val crudResult = intent.getIntExtra(Crud.BROADCAST_EXTRAS_KEY_CRUD_OPERATION_RESULT, 0)
+                sendMessage(crudResult == 1)
+            }
+        }
+    }
+
     private fun sendMessage(result: Boolean) {
+        Log.v(tag, "Crud operation result [ $result ]")
+
         val msg = handler?.obtainMessage()
         if (result) {
             msg?.arg1 = 1
@@ -100,6 +116,13 @@ class NoteActivity : ItemActivity() {
         }
         note_title.addTextChangedListener(textWatcher)
         note_content.addTextChangedListener(textWatcher)
+        val intentFiler = IntentFilter(Crud.BROADCAST_ACTION)
+        registerReceiver(crudOperationListener, intentFiler)
+    }
+
+    override fun onDestroy() {
+        unregisterReceiver(crudOperationListener)
+        super.onDestroy()
     }
 
     private fun getNoteContent(): String {
